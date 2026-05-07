@@ -1,0 +1,10 @@
+services:
+  lift:
+    image: nginx:alpine
+    container_name: lift
+    restart: unless-stopped
+    ports:
+      # Host port 8080 → container port 80. Change left side if 8080 is taken.
+      - "8080:80"
+    volumes:
+      - ./public:/usr/share/nginx/html:ro

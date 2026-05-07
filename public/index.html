@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="LIFT">
+<title>LIFT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0a;
+  --surface: #141414;
+  --surface-2: #1c1c1c;
+  --surface-3: #242424;
+  --border: #2a2a2a;
+  --border-bright: #3a3a3a;
+  --text: #f2f2f2;
+  --text-dim: #888;
+  --text-faint: #555;
+  --accent: #ff6b35;
+  --accent-dim: #cc4a1a;
+  --success: #a3e635;
+  --danger: #ef4444;
+  --safe: env(safe-area-inset-bottom, 0px);
+  --safe-top: env(safe-area-inset-top, 0px);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 16px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+  min-height: 100dvh;
+}
+
+body {
+  padding-top: var(--safe-top);
+  padding-bottom: var(--safe);
+}
+
+button, input, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+input, textarea {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 12px;
+  border-radius: 4px;
+  outline: none;
+  width: 100%;
+}
+
+input:focus, textarea:focus { border-color: var(--accent); }
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  text-align: center;
+  font-weight: 700;
+}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.app {
+  max-width: 600px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  padding: 0 16px 80px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ========== HEADER ========== */
+.header {
+  padding: 20px 0 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 24px;
+}
+
+.header .logo {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 24px;
+  letter-spacing: 0.05em;
+}
+
+.header .logo .dot {
+  color: var(--accent);
+}
+
+.header .date {
+  font-size: 12px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.back-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: var(--text-dim);
+  padding: 4px 0;
+  letter-spacing: 0.05em;
+}
+.back-btn:active { color: var(--text); }
+
+/* ========== HOME ========== */
+.label {
+  font-size: 11px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  margin-bottom: 8px;
+}
+
+.next-up {
+  padding: 28px 0 32px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+
+.session-name {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 56px;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+
+.session-focus {
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-bottom: 20px;
+}
+
+.session-focus .accent {
+  color: var(--accent);
+}
+
+.last-completed {
+  font-size: 13px;
+  color: var(--text-faint);
+  letter-spacing: 0.05em;
+}
+
+.last-completed strong {
+  color: var(--text-dim);
+  font-weight: 500;
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  padding: 18px 20px;
+  border-radius: 4px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 15px;
+  text-align: center;
+  transition: transform 0.05s ease, background 0.15s ease;
+}
+.btn:active { transform: scale(0.98); }
+
+.btn-primary {
+  background: var(--accent);
+  color: #000;
+}
+.btn-primary:active { background: var(--accent-dim); }
+
+.btn-secondary {
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn-ghost {
+  color: var(--text-dim);
+  padding: 14px;
+  font-size: 13px;
+}
+.btn-ghost:active { color: var(--text); }
+
+.btn-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+.btn-row .btn { flex: 1; }
+
+.cta-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.resume-banner {
+  background: var(--surface-2);
+  border: 1px solid var(--accent-dim);
+  border-radius: 4px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+.resume-banner .label { color: var(--accent); margin-bottom: 4px; }
+.resume-banner .body { font-size: 14px; color: var(--text-dim); }
+
+/* ========== SESSION PICKER ========== */
+.picker-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.picker-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 16px 18px;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.picker-item:active { background: var(--surface-2); }
+
+.picker-item .name {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 18px;
+  letter-spacing: 0.02em;
+}
+
+.picker-item .focus {
+  font-size: 11px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-top: 4px;
+}
+
+.picker-item .arrow {
+  color: var(--text-faint);
+  font-size: 20px;
+}
+
+/* ========== SESSION (LOGGING) ========== */
+.session-header {
+  padding: 4px 0 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 20px;
+}
+.session-header h1 {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 32px;
+  letter-spacing: -0.01em;
+  margin-bottom: 4px;
+}
+.session-header .meta {
+  font-size: 12px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.exercise {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.exercise.complete {
+  border-color: var(--success);
+}
+
+.exercise-head {
+  padding: 16px 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.exercise-head .info { flex: 1; min-width: 0; }
+
+.exercise-head .name {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+
+.exercise-head .target {
+  font-size: 12px;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+}
+
+.exercise-head .target .sep {
+  color: var(--text-faint);
+  margin: 0 6px;
+}
+
+.exercise-head .last {
+  font-size: 11px;
+  color: var(--text-faint);
+  margin-top: 4px;
+  letter-spacing: 0.03em;
+}
+
+.exercise-head .toggle {
+  color: var(--text-faint);
+  font-size: 14px;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.exercise.complete .exercise-head .toggle {
+  color: var(--success);
+}
+
+.exercise-body {
+  display: none;
+  padding: 4px 18px 18px;
+  border-top: 1px solid var(--border);
+}
+
+.exercise.open .exercise-body { display: block; }
+
+.weight-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 0 12px;
+}
+
+.weight-row .label-inline {
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.15em;
+  min-width: 56px;
+}
+
+.stepper {
+  width: 44px;
+  height: 44px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--text);
+}
+.stepper:active { background: var(--surface-3); }
+
+.weight-input {
+  flex: 1;
+  height: 44px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.unit {
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+}
+
+.sets-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.set-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+}
+
+.set-row .set-label {
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+  width: 40px;
+  flex-shrink: 0;
+}
+
+.set-row .last-hint {
+  font-size: 11px;
+  color: var(--text-faint);
+  width: 40px;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.rep-input {
+  flex: 1;
+  height: 44px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+  background: var(--surface-2);
+}
+
+.rep-input.in-range { border-color: var(--accent); }
+.rep-input.at-top { border-color: var(--success); color: var(--success); }
+.rep-input.below { border-color: var(--border); color: var(--text-dim); }
+
+.set-row .rep-stepper {
+  width: 44px;
+  height: 44px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.set-row .rep-stepper:active { background: var(--surface-3); }
+
+.range-flag {
+  margin-top: 14px;
+  padding: 10px 12px;
+  background: rgba(163, 230, 53, 0.08);
+  border: 1px solid var(--success);
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--success);
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+
+.range-flag strong {
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.notes-section {
+  margin-top: 24px;
+}
+
+.notes-section .label { margin-bottom: 8px; }
+
+textarea {
+  min-height: 70px;
+  resize: vertical;
+  font-size: 14px;
+}
+
+.finish-section {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.finish-section .summary {
+  font-size: 12px;
+  color: var(--text-dim);
+  text-align: center;
+  margin-bottom: 16px;
+  letter-spacing: 0.05em;
+}
+
+/* ========== HISTORY ========== */
+.history-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-dim);
+}
+.history-empty .big {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 24px;
+  color: var(--text-faint);
+  margin-bottom: 12px;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.history-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 14px 16px;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.history-item:active { background: var(--surface-2); }
+
+.history-item .h-name {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+}
+
+.history-item .h-date {
+  font-size: 11px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 4px;
+}
+
+.history-item .h-summary {
+  font-size: 11px;
+  color: var(--text-faint);
+  margin-top: 4px;
+}
+
+.history-item .h-arrow {
+  color: var(--text-faint);
+}
+
+/* ========== DETAIL ========== */
+.detail-block {
+  margin-bottom: 16px;
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.detail-block .d-name {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.detail-block .d-data {
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.detail-block .d-data strong {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.detail-notes {
+  background: var(--surface-2);
+  padding: 14px 16px;
+  border-radius: 4px;
+  font-size: 13px;
+  color: var(--text-dim);
+  font-style: italic;
+  margin-bottom: 16px;
+}
+
+.detail-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+/* ========== FOOTER NAV ========== */
+.footer {
+  margin-top: auto;
+  padding: 24px 0 12px;
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  font-size: 11px;
+  color: var(--text-faint);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.footer button {
+  color: var(--text-faint);
+  letter-spacing: inherit;
+  font-size: inherit;
+  text-transform: inherit;
+}
+.footer button:active { color: var(--text); }
+
+.footer .sep { color: var(--text-faint); }
+
+/* ========== TOAST ========== */
+.toast {
+  position: fixed;
+  bottom: calc(20px + var(--safe));
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface-3);
+  color: var(--text);
+  padding: 12px 20px;
+  border-radius: 4px;
+  border: 1px solid var(--border-bright);
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  max-width: 90%;
+  text-align: center;
+}
+.toast.show { opacity: 1; }
+
+/* ========== MODAL ========== */
+.modal-bg {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 200;
+}
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border-bright);
+  border-radius: 6px;
+  padding: 24px;
+  max-width: 400px;
+  width: 100%;
+}
+.modal h2 {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+.modal p {
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+.modal-actions {
+  display: flex;
+  gap: 10px;
+}
+.modal-actions .btn { flex: 1; padding: 14px; font-size: 13px; }
+
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<div class="toast" id="toast"></div>
+<input type="file" id="import-file" accept=".json,application/json" style="display:none">
+
+<script>
+"use strict";
+
+// ============================================================
+//  PROGRAM DATA  -  Jimmy's 4-session rotation
+// ============================================================
+const ROTATION = ["Lower A", "Upper A", "Lower B", "Upper B"];
+
+const PROGRAM = {
+  "Lower A": {
+    focus: "Quad focus",
+    exercises: [
+      { name: "Leg Press",                sets: 4, repMin: 6,  repMax: 8,  rest: "3 min", inc: 5 },
+      { name: "Bulgarian Split Squat",    sets: 3, repMin: 8,  repMax: 10, rest: "2 min", inc: 2.5, suffix: "/ leg" },
+      { name: "Hip Thrust",               sets: 3, repMin: 8,  repMax: 10, rest: "2 min", inc: 5 },
+      { name: "Leg Curl",                 sets: 3, repMin: 10, repMax: 12, rest: "90 s",  inc: 2.5 },
+      { name: "Standing Calf Raise",      sets: 4, repMin: 8,  repMax: 12, rest: "60 s",  inc: 2.5 }
+    ]
+  },
+  "Upper A": {
+    focus: "Bench focus",
+    exercises: [
+      { name: "Bench Press",              sets: 4, repMin: 5,  repMax: 6,  rest: "3 min", inc: 2.5 },
+      { name: "Chest-Supported Row",      sets: 4, repMin: 6,  repMax: 8,  rest: "2 min", inc: 2.5 },
+      { name: "Incline DB Press",         sets: 3, repMin: 8,  repMax: 10, rest: "90 s",  inc: 2.5 },
+      { name: "Lat Pulldown",             sets: 3, repMin: 10, repMax: 12, rest: "90 s",  inc: 2.5 },
+      { name: "Cable Lateral Raise",      sets: 3, repMin: 12, repMax: 15, rest: "60 s",  inc: 2.5 },
+      { name: "Tricep Pushdown",          sets: 3, repMin: 10, repMax: 12, rest: "60 s",  inc: 2.5 }
+    ]
+  },
+  "Lower B": {
+    focus: "Posterior chain focus",
+    exercises: [
+      { name: "Hip Thrust (heavy)",       sets: 4, repMin: 6,  repMax: 8,  rest: "3 min", inc: 5 },
+      { name: "Trap Bar DL / Leg Press",  sets: 3, repMin: 6,  repMax: 8,  rest: "2-3 min", inc: 5 },
+      { name: "Walking Lunges",           sets: 3, repMin: 10, repMax: 10, rest: "90 s",  inc: 2.5, suffix: "/ leg" },
+      { name: "Leg Extension",            sets: 3, repMin: 12, repMax: 15, rest: "90 s",  inc: 2.5 },
+      { name: "Seated Calf Raise",        sets: 4, repMin: 12, repMax: 15, rest: "60 s",  inc: 2.5 }
+    ]
+  },
+  "Upper B": {
+    focus: "Shoulder focus",
+    exercises: [
+      { name: "Seated DB Shoulder Press", sets: 4, repMin: 6,  repMax: 8,  rest: "3 min", inc: 2.5 },
+      { name: "Pull-ups / Lat Pulldown",  sets: 4, repMin: 6,  repMax: 10, rest: "2 min", inc: 2.5 },
+      { name: "Incline DB Press",         sets: 3, repMin: 8,  repMax: 10, rest: "90 s",  inc: 2.5 },
+      { name: "Single-Arm DB Row",        sets: 3, repMin: 8,  repMax: 10, rest: "90 s",  inc: 2.5, suffix: "/ side" },
+      { name: "DB Lateral Raise",         sets: 3, repMin: 12, repMax: 15, rest: "60 s",  inc: 2.5 },
+      { name: "EZ-Bar / DB Curl",         sets: 3, repMin: 8,  repMax: 10, rest: "60 s",  inc: 2.5 }
+    ]
+  }
+};
+
+// ============================================================
+//  STATE  +  STORAGE
+// ============================================================
+const LS_HISTORY = "lift.history.v1";
+const LS_DRAFT   = "lift.draft.v1";
+
+const state = {
+  view: "home",          // home | picker | session | history | detail
+  history: [],
+  draft: null,           // active session being logged
+  detailId: null,
+  expandedExerciseIdx: 0
+};
+
+function loadAll() {
+  try { state.history = JSON.parse(localStorage.getItem(LS_HISTORY) || "[]"); }
+  catch { state.history = []; }
+  try {
+    const d = localStorage.getItem(LS_DRAFT);
+    state.draft = d ? JSON.parse(d) : null;
+  } catch { state.draft = null; }
+}
+
+function saveHistory() {
+  localStorage.setItem(LS_HISTORY, JSON.stringify(state.history));
+}
+
+function saveDraft() {
+  if (state.draft) localStorage.setItem(LS_DRAFT, JSON.stringify(state.draft));
+  else localStorage.removeItem(LS_DRAFT);
+}
+
+// ============================================================
+//  LOGIC HELPERS
+// ============================================================
+function nextSessionType() {
+  if (state.history.length === 0) return ROTATION[0];
+  const sorted = [...state.history].sort((a, b) => new Date(b.date) - new Date(a.date));
+  const idx = ROTATION.indexOf(sorted[0].type);
+  return ROTATION[(idx + 1) % ROTATION.length];
+}
+
+// Find most recent session of given type that has logged data for the named exercise
+function lastTime(type, exerciseName) {
+  const sorted = [...state.history]
+    .filter(s => s.type === type)
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
+  for (const s of sorted) {
+    const ex = s.exercises.find(e => e.name === exerciseName);
+    if (ex && ex.sets.some(set => set.reps != null && set.reps > 0)) {
+      return ex;
+    }
+  }
+  return null;
+}
+
+function hitTopOfRange(exDraft, exCfg) {
+  if (exDraft.sets.length !== exCfg.sets) return false;
+  return exDraft.sets.every(s => s.reps != null && s.reps >= exCfg.repMax);
+}
+
+function exerciseInRange(exDraft, exCfg) {
+  return exDraft.sets.every(s => s.reps != null && s.reps >= exCfg.repMin);
+}
+
+function exerciseLogged(exDraft) {
+  return exDraft.sets.some(s => s.reps != null && s.reps > 0);
+}
+
+function startSession(type) {
+  const cfg = PROGRAM[type];
+  const exercises = cfg.exercises.map(ex => {
+    const last = lastTime(type, ex.name);
+    return {
+      name: ex.name,
+      weight: last ? last.weight : null,
+      sets: Array.from({ length: ex.sets }, () => ({ reps: null }))
+    };
+  });
+  state.draft = {
+    id: Date.now().toString(),
+    type,
+    date: new Date().toISOString(),
+    notes: "",
+    exercises
+  };
+  state.expandedExerciseIdx = 0;
+  saveDraft();
+  state.view = "session";
+  render();
+}
+
+function finishSession() {
+  if (!state.draft) return;
+  const hasAnyData = state.draft.exercises.some(ex =>
+    ex.sets.some(s => s.reps != null && s.reps > 0)
+  );
+  if (!hasAnyData) {
+    showToast("No reps logged. Cancel instead?");
+    return;
+  }
+  state.history.push(state.draft);
+  state.draft = null;
+  saveHistory();
+  saveDraft();
+  state.view = "home";
+  render();
+  showToast("Session saved");
+}
+
+function cancelSession() {
+  state.draft = null;
+  saveDraft();
+  state.view = "home";
+  render();
+}
+
+function deleteSession(id) {
+  state.history = state.history.filter(s => s.id !== id);
+  saveHistory();
+  state.view = "history";
+  state.detailId = null;
+  render();
+  showToast("Deleted");
+}
+
+// ============================================================
+//  EXPORT / IMPORT
+// ============================================================
+function exportData() {
+  const blob = new Blob([JSON.stringify(state.history, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `lift-backup-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast("Backup exported");
+}
+
+function importData(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!Array.isArray(data)) throw new Error("not an array");
+      state.history = data;
+      saveHistory();
+      render();
+      showToast(`Imported ${data.length} sessions`);
+    } catch (err) {
+      showToast("Import failed: invalid file");
+    }
+  };
+  reader.readAsText(file);
+}
+
+// ============================================================
+//  RENDER
+// ============================================================
+function fmtDate(iso, opts = {}) {
+  const d = new Date(iso);
+  const days = ["SUN","MON","TUE","WED","THU","FRI","SAT"];
+  const months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+  if (opts.short) return `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]}`;
+  if (opts.full) return `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+  return `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]}`;
+}
+
+function fmtRelative(iso) {
+  const ms = Date.now() - new Date(iso).getTime();
+  const days = Math.floor(ms / 86400000);
+  if (days < 1) return "today";
+  if (days === 1) return "yesterday";
+  if (days < 7) return `${days} days ago`;
+  const weeks = Math.floor(days / 7);
+  if (weeks === 1) return "1 week ago";
+  if (weeks < 5) return `${weeks} weeks ago`;
+  return `${Math.floor(days / 30)} months ago`;
+}
+
+function header(opts = {}) {
+  const today = fmtDate(new Date().toISOString(), { short: true });
+  if (opts.back) {
+    return `<div class="header">
+      <button class="back-btn" data-action="${opts.back}">← BACK</button>
+      <div class="date">${today}</div>
+    </div>`;
+  }
+  return `<div class="header">
+    <div class="logo">LIFT<span class="dot">.</span></div>
+    <div class="date">${today}</div>
+  </div>`;
+}
+
+function viewHome() {
+  const next = nextSessionType();
+  const cfg = PROGRAM[next];
+  const lastSession = state.history.length
+    ? [...state.history].sort((a,b)=>new Date(b.date)-new Date(a.date))[0]
+    : null;
+
+  let resumeBlock = "";
+  if (state.draft) {
+    resumeBlock = `<div class="resume-banner">
+      <div class="label">In Progress</div>
+      <div class="body">You have an unfinished ${state.draft.type} session.</div>
+      <div class="btn-row">
+        <button class="btn btn-primary" data-action="resume">RESUME</button>
+        <button class="btn btn-secondary" data-action="discard-draft">DISCARD</button>
+      </div>
+    </div>`;
+  }
+
+  const lastBlock = lastSession
+    ? `<div class="last-completed">Last session — <strong>${lastSession.type}</strong>, ${fmtRelative(lastSession.date)}</div>`
+    : `<div class="last-completed">First session — let's go.</div>`;
+
+  return `${header()}
+    ${resumeBlock}
+    <div class="next-up">
+      <div class="label">Next Up</div>
+      <div class="session-name">${next.toUpperCase()}</div>
+      <div class="session-focus">${cfg.focus} <span class="accent">·</span> ${cfg.exercises.length} exercises</div>
+      ${lastBlock}
+    </div>
+    <div class="cta-stack">
+      <button class="btn btn-primary" data-action="start" data-type="${next}">START ${next.toUpperCase()}</button>
+      <button class="btn-ghost" data-action="picker">Pick different session →</button>
+    </div>
+    ${footer()}`;
+}
+
+function viewPicker() {
+  const items = ROTATION.map(type => {
+    const cfg = PROGRAM[type];
+    return `<button class="picker-item" data-action="start" data-type="${type}">
+      <div>
+        <div class="name">${type.toUpperCase()}</div>
+        <div class="focus">${cfg.focus}</div>
+      </div>
+      <div class="arrow">→</div>
+    </button>`;
+  }).join("");
+  return `${header({ back: "go-home" })}
+    <div class="label">Pick A Session</div>
+    <div class="picker-list">${items}</div>
+    ${footer()}`;
+}
+
+function viewSession() {
+  const draft = state.draft;
+  if (!draft) { state.view = "home"; return viewHome(); }
+  const cfg = PROGRAM[draft.type];
+  const dateStr = fmtDate(draft.date, { short: true });
+  const time = new Date(draft.date).toLocaleTimeString("en-AU", { hour:"2-digit", minute:"2-digit", hour12: false });
+
+  const exerciseBlocks = cfg.exercises.map((exCfg, i) => {
+    const exDraft = draft.exercises[i];
+    const last = lastTime(draft.type, exCfg.name);
+    const open = state.expandedExerciseIdx === i;
+    const complete = exerciseLogged(exDraft) && exerciseInRange(exDraft, exCfg);
+    const topHit = hitTopOfRange(exDraft, exCfg);
+
+    const lastStr = last
+      ? `Last: ${last.weight}kg × ${last.sets.map(s => s.reps ?? "—").join(",")}`
+      : `Last: —`;
+
+    const targetStr = `${exCfg.sets} × ${exCfg.repMin}–${exCfg.repMax}<span class="sep">·</span>${exCfg.rest}${exCfg.suffix ? '<span class="sep">·</span>'+exCfg.suffix : ''}`;
+
+    let body = "";
+    if (open) {
+      const weight = exDraft.weight ?? "";
+      const setsHtml = exDraft.sets.map((s, si) => {
+        const repsVal = s.reps ?? "";
+        const lastReps = last ? (last.sets[si]?.reps ?? null) : null;
+        let cls = "rep-input";
+        if (s.reps != null) {
+          if (s.reps >= exCfg.repMax) cls += " at-top";
+          else if (s.reps >= exCfg.repMin) cls += " in-range";
+          else cls += " below";
+        }
+        return `<div class="set-row">
+          <div class="set-label">S${si+1}</div>
+          <button class="rep-stepper" data-action="rep-dec" data-ex="${i}" data-set="${si}">−</button>
+          <input class="${cls}" type="number" inputmode="numeric" pattern="[0-9]*"
+            data-input="rep" data-ex="${i}" data-set="${si}"
+            value="${repsVal}" placeholder="${lastReps ?? exCfg.repMin}">
+          <button class="rep-stepper" data-action="rep-inc" data-ex="${i}" data-set="${si}">+</button>
+          <div class="last-hint">${lastReps != null ? lastReps : '—'}</div>
+        </div>`;
+      }).join("");
+
+      const flag = topHit
+        ? `<div class="range-flag"><strong>TOP OF RANGE HIT</strong> — next session: ${(exDraft.weight ?? 0) + exCfg.inc}kg</div>`
+        : "";
+
+      body = `<div class="exercise-body">
+        <div class="weight-row">
+          <div class="label-inline">WEIGHT</div>
+          <button class="stepper" data-action="weight-dec" data-ex="${i}" data-inc="${exCfg.inc}">−</button>
+          <input class="weight-input" type="number" inputmode="decimal" step="${exCfg.inc}"
+            data-input="weight" data-ex="${i}" value="${weight}" placeholder="—">
+          <button class="stepper" data-action="weight-inc" data-ex="${i}" data-inc="${exCfg.inc}">+</button>
+          <div class="unit">KG</div>
+        </div>
+        <div class="sets-grid">${setsHtml}</div>
+        ${flag}
+      </div>`;
+    }
+
+    return `<div class="exercise ${open ? 'open' : ''} ${complete ? 'complete' : ''}" data-ex-card="${i}">
+      <div class="exercise-head" data-action="toggle-ex" data-ex="${i}">
+        <div class="info">
+          <div class="name">${exCfg.name}</div>
+          <div class="target">${targetStr}</div>
+          <div class="last">${lastStr}</div>
+        </div>
+        <div class="toggle">${open ? '▼' : (complete ? '✓' : '▸')}</div>
+      </div>
+      ${body}
+    </div>`;
+  }).join("");
+
+  // Summary: count exercises with all sets at top of range
+  const hits = cfg.exercises.filter((ex, i) => hitTopOfRange(draft.exercises[i], ex)).length;
+  const completes = cfg.exercises.filter((ex, i) => exerciseLogged(draft.exercises[i])).length;
+
+  return `${header({ back: "ask-cancel" })}
+    <div class="session-header">
+      <h1>${draft.type.toUpperCase()}</h1>
+      <div class="meta">${dateStr} · ${time} · ${cfg.focus}</div>
+    </div>
+    ${exerciseBlocks}
+    <div class="notes-section">
+      <div class="label">Notes</div>
+      <textarea data-input="notes" placeholder="How did it feel? Any pain? Sleep? Anything to remember.">${draft.notes || ""}</textarea>
+    </div>
+    <div class="finish-section">
+      <div class="summary">${completes}/${cfg.exercises.length} exercises logged · ${hits} ready to progress</div>
+      <button class="btn btn-primary" data-action="finish">FINISH SESSION</button>
+    </div>`;
+}
+
+function viewHistory() {
+  if (state.history.length === 0) {
+    return `${header({ back: "go-home" })}
+      <div class="history-empty">
+        <div class="big">NO SESSIONS YET</div>
+        <div>Your logged workouts will show up here.</div>
+      </div>
+      ${footer()}`;
+  }
+  const sorted = [...state.history].sort((a,b)=>new Date(b.date)-new Date(a.date));
+  const items = sorted.map(s => {
+    const completed = s.exercises.filter(e => e.sets.some(set => set.reps != null && set.reps > 0)).length;
+    return `<button class="history-item" data-action="open-detail" data-id="${s.id}">
+      <div>
+        <div class="h-name">${s.type.toUpperCase()}</div>
+        <div class="h-date">${fmtDate(s.date, { full: true })} · ${fmtRelative(s.date)}</div>
+        <div class="h-summary">${completed} exercises logged</div>
+      </div>
+      <div class="h-arrow">→</div>
+    </button>`;
+  }).join("");
+  return `${header({ back: "go-home" })}
+    <div class="label">History · ${state.history.length} session${state.history.length === 1 ? '' : 's'}</div>
+    <div class="history-list">${items}</div>
+    ${footer()}`;
+}
+
+function viewDetail() {
+  const session = state.history.find(s => s.id === state.detailId);
+  if (!session) { state.view = "history"; return viewHistory(); }
+  const cfg = PROGRAM[session.type];
+
+  const blocks = session.exercises.map((ex, i) => {
+    const exCfg = cfg.exercises[i] || {};
+    const setStr = ex.sets.map(s => s.reps ?? "—").join(", ");
+    const weight = ex.weight != null ? `${ex.weight}kg` : "—";
+    return `<div class="detail-block">
+      <div class="d-name">${ex.name}</div>
+      <div class="d-data"><strong>${weight}</strong> · ${setStr}${exCfg.suffix ? ' '+exCfg.suffix : ''}</div>
+    </div>`;
+  }).join("");
+
+  const notesBlock = session.notes
+    ? `<div class="detail-notes">"${session.notes}"</div>`
+    : "";
+
+  return `${header({ back: "go-history" })}
+    <div class="session-header">
+      <h1>${session.type.toUpperCase()}</h1>
+      <div class="meta">${fmtDate(session.date, { full: true })}</div>
+    </div>
+    ${notesBlock}
+    ${blocks}
+    <div class="detail-actions">
+      <button class="btn btn-secondary" data-action="confirm-delete" data-id="${session.id}">DELETE SESSION</button>
+    </div>`;
+}
+
+function footer() {
+  return `<div class="footer">
+    <button data-action="go-history">HISTORY</button>
+    <span class="sep">·</span>
+    <button data-action="export">EXPORT</button>
+    <span class="sep">·</span>
+    <button data-action="import">IMPORT</button>
+  </div>`;
+}
+
+function render() {
+  const app = document.getElementById("app");
+  let html;
+  switch (state.view) {
+    case "home":     html = viewHome(); break;
+    case "picker":   html = viewPicker(); break;
+    case "session":  html = viewSession(); break;
+    case "history":  html = viewHistory(); break;
+    case "detail":   html = viewDetail(); break;
+    default:         html = viewHome();
+  }
+  app.innerHTML = html;
+  window.scrollTo(0, 0);
+}
+
+// ============================================================
+//  TOAST
+// ============================================================
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 2200);
+}
+
+// ============================================================
+//  MODAL  (cancel session confirmation, delete confirmation)
+// ============================================================
+function showModal({ title, body, confirmText, cancelText, onConfirm }) {
+  const wrap = document.createElement("div");
+  wrap.className = "modal-bg";
+  wrap.innerHTML = `<div class="modal">
+    <h2>${title}</h2>
+    <p>${body}</p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" data-modal="cancel">${cancelText || "Cancel"}</button>
+      <button class="btn btn-primary" data-modal="confirm">${confirmText || "OK"}</button>
+    </div>
+  </div>`;
+  document.body.appendChild(wrap);
+  wrap.addEventListener("click", e => {
+    if (e.target === wrap || e.target.dataset.modal === "cancel") {
+      wrap.remove();
+    } else if (e.target.dataset.modal === "confirm") {
+      wrap.remove();
+      onConfirm();
+    }
+  });
+}
+
+// ============================================================
+//  EVENT HANDLERS
+// ============================================================
+document.addEventListener("click", e => {
+  const target = e.target.closest("[data-action]");
+  if (!target) return;
+  const action = target.dataset.action;
+  const data = target.dataset;
+
+  switch (action) {
+    case "go-home":     state.view = "home"; render(); break;
+    case "go-history":  state.view = "history"; render(); break;
+    case "picker":      state.view = "picker"; render(); break;
+    case "start":       startSession(data.type); break;
+    case "resume":      state.view = "session"; render(); break;
+    case "discard-draft":
+      showModal({
+        title: "Discard session?",
+        body: "Your unfinished session will be deleted. This can't be undone.",
+        confirmText: "DISCARD",
+        cancelText: "KEEP",
+        onConfirm: () => cancelSession()
+      });
+      break;
+    case "ask-cancel":
+      showModal({
+        title: "Leave session?",
+        body: "Your progress is auto-saved. You can resume from the home screen.",
+        confirmText: "LEAVE",
+        cancelText: "STAY",
+        onConfirm: () => { state.view = "home"; render(); }
+      });
+      break;
+    case "finish":      finishSession(); break;
+    case "toggle-ex": {
+      const idx = parseInt(data.ex, 10);
+      state.expandedExerciseIdx = state.expandedExerciseIdx === idx ? -1 : idx;
+      render();
+      break;
+    }
+    case "weight-inc":
+    case "weight-dec": {
+      const idx = parseInt(data.ex, 10);
+      const inc = parseFloat(data.inc);
+      const ex = state.draft.exercises[idx];
+      const cur = ex.weight ?? 0;
+      ex.weight = Math.max(0, cur + (action === "weight-inc" ? inc : -inc));
+      saveDraft();
+      render();
+      break;
+    }
+    case "rep-inc":
+    case "rep-dec": {
+      const idx = parseInt(data.ex, 10);
+      const sIdx = parseInt(data.set, 10);
+      const setObj = state.draft.exercises[idx].sets[sIdx];
+      const cur = setObj.reps ?? 0;
+      setObj.reps = Math.max(0, cur + (action === "rep-inc" ? 1 : -1));
+      saveDraft();
+      render();
+      break;
+    }
+    case "open-detail":
+      state.detailId = data.id;
+      state.view = "detail";
+      render();
+      break;
+    case "confirm-delete":
+      showModal({
+        title: "Delete session?",
+        body: "This session will be permanently removed from your history.",
+        confirmText: "DELETE",
+        cancelText: "KEEP",
+        onConfirm: () => deleteSession(data.id)
+      });
+      break;
+    case "export":      exportData(); break;
+    case "import":      document.getElementById("import-file").click(); break;
+  }
+});
+
+document.addEventListener("input", e => {
+  const target = e.target;
+  if (!target.dataset.input) return;
+  const kind = target.dataset.input;
+
+  if (kind === "weight") {
+    const idx = parseInt(target.dataset.ex, 10);
+    const v = parseFloat(target.value);
+    state.draft.exercises[idx].weight = isNaN(v) ? null : v;
+    saveDraft();
+    return;
+  }
+
+  if (kind === "rep") {
+    const idx = parseInt(target.dataset.ex, 10);
+    const sIdx = parseInt(target.dataset.set, 10);
+    const v = parseInt(target.value, 10);
+    state.draft.exercises[idx].sets[sIdx].reps = isNaN(v) ? null : v;
+    saveDraft();
+    // Live update of set styling without full re-render
+    const cfg = PROGRAM[state.draft.type].exercises[idx];
+    target.classList.remove("at-top","in-range","below");
+    if (!isNaN(v)) {
+      if (v >= cfg.repMax) target.classList.add("at-top");
+      else if (v >= cfg.repMin) target.classList.add("in-range");
+      else target.classList.add("below");
+    }
+    // Update card complete / top-of-range flag — simplest: re-render on blur
+    return;
+  }
+
+  if (kind === "notes") {
+    state.draft.notes = target.value;
+    saveDraft();
+    return;
+  }
+});
+
+// On input blur, re-render to update completion state and flags
+document.addEventListener("blur", e => {
+  if (e.target.dataset && e.target.dataset.input === "rep" && state.view === "session") {
+    render();
+  }
+}, true);
+
+document.getElementById("import-file").addEventListener("change", e => {
+  const f = e.target.files[0];
+  if (f) importData(f);
+  e.target.value = "";
+});
+
+// ============================================================
+//  INIT
+// ============================================================
+loadAll();
+render();
+
+</script>
+</body>
+</html>
