@@ -59,6 +59,9 @@ button {
   border: none;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 input, textarea {
@@ -1186,6 +1189,56 @@ function render() {
   window.scrollTo(0, 0);
 }
 
+// Targeted update for a single exercise card — avoids the full re-render
+// that would reset scroll position and flash the screen on mobile blur events.
+function refreshExerciseState(idx) {
+  if (state.view !== "session" || !state.draft) return;
+  const cfg = PROGRAM[state.draft.type].exercises[idx];
+  const exDraft = state.draft.exercises[idx];
+  const card = document.querySelector(`.exercise[data-ex-card="${idx}"]`);
+  if (!card) return;
+
+  const complete = exerciseLogged(exDraft) && exerciseInRange(exDraft, cfg);
+  const topHit = hitTopOfRange(exDraft, cfg);
+  const open = card.classList.contains("open");
+
+  card.classList.toggle("complete", complete);
+
+  const toggle = card.querySelector(".exercise-head .toggle");
+  if (toggle) toggle.textContent = open ? '▼' : (complete ? '✓' : '▸');
+
+  let flag = card.querySelector(".range-flag");
+  if (topHit && exDraft.weight != null) {
+    const html = `<strong>TOP OF RANGE HIT</strong> — next session: ${exDraft.weight + cfg.inc}kg`;
+    if (flag) {
+      flag.innerHTML = html;
+    } else {
+      const body = card.querySelector(".exercise-body");
+      if (body) {
+        flag = document.createElement("div");
+        flag.className = "range-flag";
+        flag.innerHTML = html;
+        body.appendChild(flag);
+      }
+    }
+  } else if (flag) {
+    flag.remove();
+  }
+
+  refreshSummary();
+}
+
+function refreshSummary() {
+  if (state.view !== "session" || !state.draft) return;
+  const cfg = PROGRAM[state.draft.type];
+  const hits = cfg.exercises.filter((ex, i) => hitTopOfRange(state.draft.exercises[i], ex)).length;
+  const completes = cfg.exercises.filter((ex, i) => exerciseLogged(state.draft.exercises[i])).length;
+  const summary = document.querySelector(".finish-section .summary");
+  if (summary) {
+    summary.textContent = `${completes}/${cfg.exercises.length} exercises logged · ${hits} ready to progress`;
+  }
+}
+
 // ============================================================
 //  TOAST
 // ============================================================
@@ -1344,10 +1397,14 @@ document.addEventListener("input", e => {
   }
 });
 
-// On input blur, re-render to update completion state and flags
+// On input blur, surgically update the affected exercise card. Avoids the
+// full re-render's flash and scroll-jump when the iOS keyboard dismisses.
 document.addEventListener("blur", e => {
-  if (e.target.dataset && e.target.dataset.input === "rep" && state.view === "session") {
-    render();
+  if (state.view !== "session") return;
+  const t = e.target;
+  if (!t.dataset) return;
+  if (t.dataset.input === "rep" || t.dataset.input === "weight") {
+    refreshExerciseState(parseInt(t.dataset.ex, 10));
   }
 }, true);
 
