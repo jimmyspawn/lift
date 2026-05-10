@@ -8,4 +8,7 @@ services:
       # (8080 is in use by qBittorrent on the NAS.)
       - "8090:80"
     volumes:
-      - ./public:/usr/share/nginx/html:ro
+      # Absolute path so this works when deployed via Portainer (which doesn't
+      # resolve ./public relative to the repo). Repo lives at /volume1/docker/lift
+      # on the NAS — clone there and update via `git pull`.
+      - /volume1/docker/lift/public:/usr/share/nginx/html:ro

@@ -18,11 +18,15 @@ lift/
 ## Deployment (Ugreen NAS, Docker)
 
 ```bash
-# On the NAS, somewhere persistent:
-git clone <your-repo-url> lift
+# On the NAS — the path matters because the compose uses an absolute mount:
+cd /volume1/docker
+sudo git clone <your-repo-url> lift
+sudo chown -R 1000:1000 lift
 cd lift
 docker compose up -d
 ```
+
+If managing via Portainer, deploy as a **Web editor** stack and paste the compose. Don't use **Repository** mode — Portainer clones to its own data volume, which the docker daemon can't resolve as a bind mount source.
 
 App is now at `http://<nas-ip>:8090`. To update, `git pull` and the next page reload picks up the change (the volume is read-only mounted, no container restart needed).
 
