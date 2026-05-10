@@ -359,15 +359,16 @@ input[type="number"]::-webkit-inner-spin-button {
 .weight-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   margin: 16px 0 12px;
 }
 
 .weight-row .label-inline {
   font-size: 11px;
   color: var(--text-dim);
-  letter-spacing: 0.15em;
-  min-width: 56px;
+  letter-spacing: 0.1em;
+  width: 40px;
+  flex-shrink: 0;
 }
 
 .stepper {
@@ -391,9 +392,8 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .unit {
-  font-size: 11px;
-  color: var(--text-dim);
-  letter-spacing: 0.1em;
+  width: 40px;
+  flex-shrink: 0;
 }
 
 .sets-grid {
@@ -800,6 +800,20 @@ function exerciseLogged(exDraft) {
 }
 
 function startSession(type) {
+  if (state.draft) {
+    showModal({
+      title: "Discard current session?",
+      body: `You have a ${state.draft.type} session in progress. Starting ${type} will discard it.`,
+      confirmText: "DISCARD & START",
+      cancelText: "KEEP",
+      onConfirm: () => createNewDraft(type)
+    });
+    return;
+  }
+  createNewDraft(type);
+}
+
+function createNewDraft(type) {
   const cfg = PROGRAM[type];
   const exercises = cfg.exercises.map(ex => {
     const last = lastTime(type, ex.name);
@@ -873,16 +887,31 @@ function exportData() {
 function importData(file) {
   const reader = new FileReader();
   reader.onload = e => {
+    let data;
     try {
-      const data = JSON.parse(e.target.result);
+      data = JSON.parse(e.target.result);
       if (!Array.isArray(data)) throw new Error("not an array");
+    } catch (err) {
+      showToast("Import failed: invalid file");
+      return;
+    }
+    const apply = () => {
       state.history = data;
       saveHistory();
       render();
       showToast(`Imported ${data.length} sessions`);
-    } catch (err) {
-      showToast("Import failed: invalid file");
+    };
+    if (state.history.length === 0) {
+      apply();
+      return;
     }
+    showModal({
+      title: "Replace history?",
+      body: `This will replace your ${state.history.length} existing session${state.history.length === 1 ? '' : 's'} with ${data.length} from the file. This can't be undone.`,
+      confirmText: "REPLACE",
+      cancelText: "CANCEL",
+      onConfirm: apply
+    });
   };
   reader.readAsText(file);
 }
@@ -1015,7 +1044,7 @@ function viewSession() {
         return `<div class="set-row">
           <div class="set-label">S${si+1}</div>
           <button class="rep-stepper" data-action="rep-dec" data-ex="${i}" data-set="${si}">−</button>
-          <input class="${cls}" type="number" inputmode="numeric" pattern="[0-9]*"
+          <input class="${cls}" type="number" inputmode="numeric" pattern="[0-9]*" min="0"
             data-input="rep" data-ex="${i}" data-set="${si}"
             value="${repsVal}" placeholder="${lastReps ?? exCfg.repMin}">
           <button class="rep-stepper" data-action="rep-inc" data-ex="${i}" data-set="${si}">+</button>
@@ -1023,18 +1052,18 @@ function viewSession() {
         </div>`;
       }).join("");
 
-      const flag = topHit
-        ? `<div class="range-flag"><strong>TOP OF RANGE HIT</strong> — next session: ${(exDraft.weight ?? 0) + exCfg.inc}kg</div>`
+      const flag = topHit && exDraft.weight != null
+        ? `<div class="range-flag"><strong>TOP OF RANGE HIT</strong> — next session: ${exDraft.weight + exCfg.inc}kg</div>`
         : "";
 
       body = `<div class="exercise-body">
         <div class="weight-row">
-          <div class="label-inline">WEIGHT</div>
+          <div class="label-inline">KG</div>
           <button class="stepper" data-action="weight-dec" data-ex="${i}" data-inc="${exCfg.inc}">−</button>
-          <input class="weight-input" type="number" inputmode="decimal" step="${exCfg.inc}"
+          <input class="weight-input" type="number" inputmode="decimal" step="${exCfg.inc}" min="0"
             data-input="weight" data-ex="${i}" value="${weight}" placeholder="—">
           <button class="stepper" data-action="weight-inc" data-ex="${i}" data-inc="${exCfg.inc}">+</button>
-          <div class="unit">KG</div>
+          <div class="unit"></div>
         </div>
         <div class="sets-grid">${setsHtml}</div>
         ${flag}
@@ -1282,8 +1311,9 @@ document.addEventListener("input", e => {
 
   if (kind === "weight") {
     const idx = parseInt(target.dataset.ex, 10);
-    const v = parseFloat(target.value);
-    state.draft.exercises[idx].weight = isNaN(v) ? null : v;
+    const raw = parseFloat(target.value);
+    const v = isNaN(raw) ? null : Math.max(0, raw);
+    state.draft.exercises[idx].weight = v;
     saveDraft();
     return;
   }
@@ -1291,13 +1321,14 @@ document.addEventListener("input", e => {
   if (kind === "rep") {
     const idx = parseInt(target.dataset.ex, 10);
     const sIdx = parseInt(target.dataset.set, 10);
-    const v = parseInt(target.value, 10);
-    state.draft.exercises[idx].sets[sIdx].reps = isNaN(v) ? null : v;
+    const raw = parseInt(target.value, 10);
+    const v = isNaN(raw) ? null : Math.max(0, raw);
+    state.draft.exercises[idx].sets[sIdx].reps = v;
     saveDraft();
     // Live update of set styling without full re-render
     const cfg = PROGRAM[state.draft.type].exercises[idx];
     target.classList.remove("at-top","in-range","below");
-    if (!isNaN(v)) {
+    if (v != null) {
       if (v >= cfg.repMax) target.classList.add("at-top");
       else if (v >= cfg.repMin) target.classList.add("in-range");
       else target.classList.add("below");
