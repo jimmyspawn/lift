@@ -17,20 +17,28 @@ lift/
 
 ## Deployment (Ugreen NAS, Docker)
 
+The compose file uses an absolute bind mount (`/volume1/docker/lift/public`), so the repo must live at `/volume1/docker/lift/` on the NAS. UGOS doesn't ship `git`, so use a throwaway `alpine/git` container to clone:
+
 ```bash
-# On the NAS — the path matters because the compose uses an absolute mount:
+ssh JimmyAdmin@<nas-ip>
 cd /volume1/docker
-sudo git clone <your-repo-url> lift
+sudo docker run --rm -v /volume1/docker:/work -w /work alpine/git clone https://github.com/jimmyspawn/lift.git
 sudo chown -R 1000:1000 lift
-cd lift
-docker compose up -d
+sudo setfacl -R -b lift/public        # strip UGOS extended ACLs
+sudo chmod -R a+rX lift/public         # readable by container's nginx user
 ```
 
-If managing via Portainer, deploy as a **Web editor** stack and paste the compose. Don't use **Repository** mode — Portainer clones to its own data volume, which the docker daemon can't resolve as a bind mount source.
+In Portainer, deploy as a **Web editor** stack and paste the compose. Don't use **Repository** mode — Portainer clones into its own data volume, which the docker daemon can't resolve as a bind mount source (you'll get a silent empty mount and 403s).
 
-App is now at `http://<nas-ip>:8090`. To update, `git pull` and the next page reload picks up the change (the volume is read-only mounted, no container restart needed).
+App is now at `http://<nas-ip>:8090`. If 8090 is taken, edit `docker-compose.yml` (both the host port and the absolute mount path).
 
-If port 8090 is taken, edit `docker-compose.yml` and change the left side of the port mapping.
+### Updating
+
+```bash
+sudo /volume1/docker/lift/nas-update.sh
+```
+
+[`nas-update.sh`](nas-update.sh) pulls the latest via `alpine/git`, strips UGOS ACLs, and resets clean perms. The volume is read-only mounted — no container restart needed; just reload the app.
 
 ### Accessing it from the gym
 
