@@ -19,7 +19,9 @@ if [ ! -d "$LIFT_DIR" ]; then
 fi
 
 echo "→ Pulling latest from origin…"
-docker run --rm -v "$LIFT_DIR":/work -w /work alpine/git pull
+# `-c safe.directory=/work` — alpine/git runs as root, but the repo files
+# are owned by uid 1000, which trips git's dubious-ownership safety check.
+docker run --rm -v "$LIFT_DIR":/work -w /work alpine/git -c safe.directory=/work pull
 
 echo "→ Stripping UGOS ACLs and resetting perms on public/…"
 setfacl -R -b "$LIFT_DIR/public"
