@@ -1228,6 +1228,14 @@ function refreshExerciseState(idx) {
   refreshSummary();
 }
 
+function applyRepStyle(input, reps, cfg) {
+  input.classList.remove("at-top", "in-range", "below");
+  if (reps == null) return;
+  if (reps >= cfg.repMax) input.classList.add("at-top");
+  else if (reps >= cfg.repMin) input.classList.add("in-range");
+  else input.classList.add("below");
+}
+
 function refreshSummary() {
   if (state.view !== "session" || !state.draft) return;
   const cfg = PROGRAM[state.draft.type];
@@ -1324,7 +1332,9 @@ document.addEventListener("click", e => {
       const cur = ex.weight ?? 0;
       ex.weight = Math.max(0, cur + (action === "weight-inc" ? inc : -inc));
       saveDraft();
-      render();
+      const wInput = document.querySelector(`input[data-input="weight"][data-ex="${idx}"]`);
+      if (wInput) wInput.value = ex.weight;
+      refreshExerciseState(idx);
       break;
     }
     case "rep-inc":
@@ -1335,7 +1345,13 @@ document.addEventListener("click", e => {
       const cur = setObj.reps ?? 0;
       setObj.reps = Math.max(0, cur + (action === "rep-inc" ? 1 : -1));
       saveDraft();
-      render();
+      const cfg = PROGRAM[state.draft.type].exercises[idx];
+      const rInput = document.querySelector(`input[data-input="rep"][data-ex="${idx}"][data-set="${sIdx}"]`);
+      if (rInput) {
+        rInput.value = setObj.reps;
+        applyRepStyle(rInput, setObj.reps, cfg);
+      }
+      refreshExerciseState(idx);
       break;
     }
     case "open-detail":
@@ -1378,15 +1394,8 @@ document.addEventListener("input", e => {
     const v = isNaN(raw) ? null : Math.max(0, raw);
     state.draft.exercises[idx].sets[sIdx].reps = v;
     saveDraft();
-    // Live update of set styling without full re-render
-    const cfg = PROGRAM[state.draft.type].exercises[idx];
-    target.classList.remove("at-top","in-range","below");
-    if (v != null) {
-      if (v >= cfg.repMax) target.classList.add("at-top");
-      else if (v >= cfg.repMin) target.classList.add("in-range");
-      else target.classList.add("below");
-    }
-    // Update card complete / top-of-range flag — simplest: re-render on blur
+    applyRepStyle(target, v, PROGRAM[state.draft.type].exercises[idx]);
+    // Card-level state (complete/flag/summary) updates on blur via refreshExerciseState.
     return;
   }
 
