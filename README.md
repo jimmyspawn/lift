@@ -24,9 +24,9 @@ cd lift
 docker compose up -d
 ```
 
-App is now at `http://<nas-ip>:8080`. To update, `git pull` and the next page reload picks up the change (the volume is read-only mounted, no container restart needed).
+App is now at `http://<nas-ip>:8090`. To update, `git pull` and the next page reload picks up the change (the volume is read-only mounted, no container restart needed).
 
-If port 8080 is taken, edit `docker-compose.yml` and change the left side of the port mapping.
+If port 8090 is taken, edit `docker-compose.yml` and change the left side of the port mapping.
 
 ### Accessing it from the gym
 
