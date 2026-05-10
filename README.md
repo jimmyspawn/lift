@@ -72,6 +72,7 @@ Roughly in priority order:
 - **Service worker for true offline.** Right now offline relies on browser cache, which iOS evicts after ~14 days of disuse. A service worker (in a separate `sw.js` since it must be its own file) would make this rock-solid.
 - **PR / progression view.** Per-exercise chart of weight × reps over time. Recharts or a tiny SVG renderer; don't pull in Chart.js.
 - **Edit past sessions.** Currently history is read-only except for delete. Sometimes you forget to log a set and want to fix it.
+- **Two profiles (Jimmy + partner).** Shared deploy, separate history per person. Profile picker on home; scope the localStorage keys (`lift.history.v*`, `lift.draft.v*`) per profile. No backend — stays client-only.
 - **Multi-device sync.** Would require a backend. Out of scope unless I switch hosting model — `Caddy + a tiny Go/Node API + SQLite on the NAS` is the obvious shape.
 - **Deload reminders.** App knows session count; flag every 6–8 weeks.
 
