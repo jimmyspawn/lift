@@ -71,7 +71,7 @@ For anyone (or any agent) editing this:
 - **One file, no build.** Don't introduce a bundler, framework, or `node_modules`. The constraint is the feature.
 - **State shape.** Single `state` object holds: `view`, `history` (array of completed sessions), `draft` (active session being logged), `detailId`, `expandedExerciseIdx`. View is one of `home | picker | session | history | detail`.
 - **Rendering.** Each view is a function returning an HTML string. `render()` writes to `#app`'s innerHTML. Inputs use event delegation (`document.addEventListener` once at top level, dispatching on `data-action` and `data-input` attributes). Don't add per-element listeners — they'll leak across re-renders.
-- **Program data** lives in the `PROGRAM` constant near the top of the script. Each exercise has `name, sets, repMin, repMax, rest, inc` and optional `suffix` ("/ leg", "/ side"). Adding a new exercise: append to the relevant session array. Adding a new session type: extend `ROTATION` and add a `PROGRAM` entry. Both are picked up automatically by all views.
+- **Program data** lives in the `PROGRAM` constant near the top of the script. Each exercise has `name, sets, repMin, repMax, rest, inc` and optional `suffix` ("/ leg", "/ side"). Adding a new exercise: append to the relevant day's array. Adding a new day: extend `DAYS` and add a `PROGRAM` entry. Both are picked up automatically by all views.
 - **Double progression rule.** `hitTopOfRange()` checks every set has `reps >= repMax`. When true, the in-session flag shows next session's weight as `current + inc`. There's no automatic weight bump — Jimmy types it in manually next session (intentional; sometimes you want to repeat a weight).
 - **Storage.** Every state mutation that should persist calls `saveDraft()` or `saveHistory()`. Don't add a debounce — localStorage writes for ~50KB are fast enough.
 
@@ -79,7 +79,7 @@ For anyone (or any agent) editing this:
 
 Roughly in priority order:
 
-- **Per-set weight override.** Currently one weight per exercise. Useful for back-off sets / drop sets.
+- ~~**Per-set weight override.**~~ Done: each exercise can toggle between one weight for all sets and per-set weights (`perSet` flag on the exercise draft; set weights live on each set object). Per-set mode carries into the next session's prefill.
 - **Rest timer.** Tap "set done" → countdown matching the exercise's rest period. Vibrate on completion.
 - **Service worker for true offline.** Right now offline relies on browser cache, which iOS evicts after ~14 days of disuse. A service worker (in a separate `sw.js` since it must be its own file) would make this rock-solid.
 - **PR / progression view.** Per-exercise chart of weight × reps over time. Recharts or a tiny SVG renderer; don't pull in Chart.js.

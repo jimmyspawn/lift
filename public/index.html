@@ -399,12 +399,49 @@ input[type="number"]::-webkit-inner-spin-button {
   flex-shrink: 0;
 }
 
+.mode-toggle {
+  display: block;
+  margin-left: auto;
+  padding: 12px 0 0;
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.mode-toggle:active { color: var(--text); }
+
 .sets-grid {
   display: flex;
   flex-direction: column;
   gap: 6px;
   margin-top: 12px;
 }
+
+.set-weight-input {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+  background: var(--surface-2);
+}
+
+.set-row .rep-input { min-width: 0; }
+
+.set-row-header {
+  padding: 0;
+  margin-bottom: -4px;
+}
+.set-row-header div {
+  font-size: 10px;
+  color: var(--text-faint);
+  letter-spacing: 0.15em;
+  text-align: center;
+}
+.set-row-header .set-label { width: 40px; flex-shrink: 0; }
+.set-row-header .hcol { flex: 1; min-width: 0; }
+.set-row-header .hspacer { width: 44px; flex-shrink: 0; }
 
 .set-row {
   display: flex;
@@ -684,53 +721,51 @@ textarea {
 "use strict";
 
 // ============================================================
-//  PROGRAM DATA  -  Jimmy's 4-session rotation
+//  PROGRAM DATA  -  Fixed weekly 3-day program (Day 1 → 2 → 3)
 // ============================================================
-const ROTATION = ["Lower A", "Upper A", "Lower B", "Upper B"];
+const DAYS = ["Day 1", "Day 2", "Day 3"];
 
 const PROGRAM = {
-  "Lower A": {
-    focus: "Quad focus",
+  "Day 1": {
+    focus: "Lower",
     exercises: [
-      { name: "Leg Press",                sets: 4, repMin: 6,  repMax: 8,  rest: "3 min", inc: 5 },
-      { name: "Bulgarian Split Squat",    sets: 3, repMin: 8,  repMax: 10, rest: "2 min", inc: 2.5, suffix: "/ leg" },
-      { name: "Hip Thrust",               sets: 3, repMin: 8,  repMax: 10, rest: "2 min", inc: 5 },
-      { name: "Leg Curl",                 sets: 3, repMin: 10, repMax: 12, rest: "90 s",  inc: 2.5 },
-      { name: "Standing Calf Raise",      sets: 4, repMin: 8,  repMax: 12, rest: "60 s",  inc: 2.5 }
+      { name: "Leg Press",                sets: 4, repMin: 6,  repMax: 8,  rest: "3 min",   inc: 5 },
+      { name: "Hip Thrust",               sets: 4, repMin: 6,  repMax: 8,  rest: "2-3 min", inc: 5 },
+      { name: "Bulgarian Split Squat",    sets: 3, repMin: 8,  repMax: 10, rest: "2 min",   inc: 2.5, suffix: "/ leg" },
+      { name: "Leg Curl",                 sets: 3, repMin: 10, repMax: 12, rest: "90 s",    inc: 2.5 },
+      { name: "Standing Calf Raise",      sets: 4, repMin: 8,  repMax: 12, rest: "60 s",    inc: 2.5 }
     ]
   },
-  "Upper A": {
-    focus: "Bench focus",
+  "Day 2": {
+    focus: "Upper",
     exercises: [
       { name: "Bench Press",              sets: 4, repMin: 5,  repMax: 6,  rest: "3 min", inc: 2.5 },
       { name: "Chest-Supported Row",      sets: 4, repMin: 6,  repMax: 8,  rest: "2 min", inc: 2.5 },
-      { name: "Incline DB Press",         sets: 3, repMin: 8,  repMax: 10, rest: "90 s",  inc: 2.5 },
+      { name: "Seated DB Shoulder Press", sets: 3, repMin: 8,  repMax: 10, rest: "2 min", inc: 2.5 },
       { name: "Lat Pulldown",             sets: 3, repMin: 10, repMax: 12, rest: "90 s",  inc: 2.5 },
       { name: "Cable Lateral Raise",      sets: 3, repMin: 12, repMax: 15, rest: "60 s",  inc: 2.5 },
-      { name: "Tricep Pushdown",          sets: 3, repMin: 10, repMax: 12, rest: "60 s",  inc: 2.5 }
+      { name: "Tricep Rope Pushdown",     sets: 3, repMin: 10, repMax: 12, rest: "60 s",  inc: 2.5 }
     ]
   },
-  "Lower B": {
-    focus: "Posterior chain focus",
+  "Day 3": {
+    focus: "Full Body",
     exercises: [
-      { name: "Hip Thrust (heavy)",       sets: 4, repMin: 6,  repMax: 8,  rest: "3 min", inc: 5 },
-      { name: "Trap Bar DL / Leg Press",  sets: 3, repMin: 6,  repMax: 8,  rest: "2-3 min", inc: 5 },
-      { name: "Walking Lunges",           sets: 3, repMin: 10, repMax: 10, rest: "90 s",  inc: 2.5, suffix: "/ leg" },
-      { name: "Leg Extension",            sets: 3, repMin: 12, repMax: 15, rest: "90 s",  inc: 2.5 },
-      { name: "Seated Calf Raise",        sets: 4, repMin: 12, repMax: 15, rest: "60 s",  inc: 2.5 }
-    ]
-  },
-  "Upper B": {
-    focus: "Shoulder focus",
-    exercises: [
-      { name: "Seated DB Shoulder Press", sets: 4, repMin: 6,  repMax: 8,  rest: "3 min", inc: 2.5 },
+      { name: "Trap Bar DL / Leg Press",  sets: 3, repMin: 6,  repMax: 8,  rest: "3 min", inc: 5 },
       { name: "Pull-ups / Lat Pulldown",  sets: 4, repMin: 6,  repMax: 10, rest: "2 min", inc: 2.5 },
       { name: "Incline DB Press",         sets: 3, repMin: 8,  repMax: 10, rest: "90 s",  inc: 2.5 },
-      { name: "Single-Arm DB Row",        sets: 3, repMin: 8,  repMax: 10, rest: "90 s",  inc: 2.5, suffix: "/ side" },
-      { name: "DB Lateral Raise",         sets: 3, repMin: 12, repMax: 15, rest: "60 s",  inc: 2.5 },
-      { name: "EZ-Bar / DB Curl",         sets: 3, repMin: 8,  repMax: 10, rest: "60 s",  inc: 2.5 }
+      { name: "Walking Lunges",           sets: 3, repMin: 10, repMax: 10, rest: "90 s",  inc: 2.5, suffix: "/ leg" },
+      { name: "Leg Extension",            sets: 3, repMin: 12, repMax: 15, rest: "90 s",  inc: 2.5 },
+      { name: "EZ-Bar Curl",              sets: 3, repMin: 8,  repMax: 10, rest: "60 s",  inc: 2.5 }
     ]
   }
+};
+
+// Old exercise names from the retired A/B rotation that map onto a renamed
+// exercise above, so last-used weights carry over from legacy history.
+const LEGACY_ALIASES = {
+  "Hip Thrust":           ["Hip Thrust (heavy)"],
+  "Tricep Rope Pushdown": ["Tricep Pushdown"],
+  "EZ-Bar Curl":          ["EZ-Bar / DB Curl"]
 };
 
 // ============================================================
@@ -753,6 +788,11 @@ function loadAll() {
   try {
     const d = localStorage.getItem(LS_DRAFT);
     state.draft = d ? JSON.parse(d) : null;
+    // A draft from the retired A/B rotation can't be logged against the new days
+    if (state.draft && !PROGRAM[state.draft.type]) {
+      state.draft = null;
+      localStorage.removeItem(LS_DRAFT);
+    }
   } catch { state.draft = null; }
 }
 
@@ -769,19 +809,20 @@ function saveDraft() {
 //  LOGIC HELPERS
 // ============================================================
 function nextSessionType() {
-  if (state.history.length === 0) return ROTATION[0];
+  if (state.history.length === 0) return DAYS[0];
   const sorted = [...state.history].sort((a, b) => new Date(b.date) - new Date(a.date));
-  const idx = ROTATION.indexOf(sorted[0].type);
-  return ROTATION[(idx + 1) % ROTATION.length];
+  const idx = DAYS.indexOf(sorted[0].type);
+  if (idx === -1) return DAYS[0]; // last session was from the retired A/B rotation
+  return DAYS[(idx + 1) % DAYS.length];
 }
 
-// Find most recent session of given type that has logged data for the named exercise
-function lastTime(type, exerciseName) {
-  const sorted = [...state.history]
-    .filter(s => s.type === type)
-    .sort((a, b) => new Date(b.date) - new Date(a.date));
+// Most recent logged data for an exercise, searched across ALL sessions
+// (legacy A/B history included) so weights carry into the new day structure.
+function lastTime(exerciseName) {
+  const names = [exerciseName, ...(LEGACY_ALIASES[exerciseName] || [])];
+  const sorted = [...state.history].sort((a, b) => new Date(b.date) - new Date(a.date));
   for (const s of sorted) {
-    const ex = s.exercises.find(e => e.name === exerciseName);
+    const ex = s.exercises.find(e => names.includes(e.name));
     if (ex && ex.sets.some(set => set.reps != null && set.reps > 0)) {
       return ex;
     }
@@ -802,6 +843,18 @@ function exerciseLogged(exDraft) {
   return exDraft.sets.some(s => s.reps != null && s.reps > 0);
 }
 
+// Inner HTML for the "add weight next session" flag, or "" if not earned.
+// In per-set mode there's no single next-session number, so suggest the increment.
+function progressionFlagHtml(exDraft, exCfg) {
+  if (!hitTopOfRange(exDraft, exCfg)) return "";
+  if (exDraft.perSet) {
+    if (!exDraft.sets.some(s => s.weight != null)) return "";
+    return `<strong>TOP OF RANGE HIT</strong> — add ${exCfg.inc}kg next session`;
+  }
+  if (exDraft.weight == null) return "";
+  return `<strong>TOP OF RANGE HIT</strong> — next session: ${exDraft.weight + exCfg.inc}kg`;
+}
+
 function startSession(type) {
   if (state.draft) {
     showModal({
@@ -819,11 +872,20 @@ function startSession(type) {
 function createNewDraft(type) {
   const cfg = PROGRAM[type];
   const exercises = cfg.exercises.map(ex => {
-    const last = lastTime(type, ex.name);
+    const last = lastTime(ex.name);
+    // If the last session used per-set weights, start in per-set mode with
+    // those weights carried over (extra sets inherit the last set's weight).
+    const perSet = !!(last && last.perSet);
     return {
       name: ex.name,
-      weight: last ? last.weight : null,
-      sets: Array.from({ length: ex.sets }, () => ({ reps: null }))
+      weight: last ? (last.weight ?? null) : null,
+      perSet,
+      sets: Array.from({ length: ex.sets }, (_, i) => ({
+        reps: null,
+        weight: perSet
+          ? (last.sets[Math.min(i, last.sets.length - 1)]?.weight ?? last.weight ?? null)
+          : null
+      }))
     };
   });
   state.draft = {
@@ -996,7 +1058,7 @@ function viewHome() {
 }
 
 function viewPicker() {
-  const items = ROTATION.map(type => {
+  const items = DAYS.map(type => {
     const cfg = PROGRAM[type];
     return `<button class="picker-item" data-action="start" data-type="${type}">
       <div>
@@ -1021,19 +1083,21 @@ function viewSession() {
 
   const exerciseBlocks = cfg.exercises.map((exCfg, i) => {
     const exDraft = draft.exercises[i];
-    const last = lastTime(draft.type, exCfg.name);
+    const last = lastTime(exCfg.name);
     const open = state.expandedExerciseIdx === i;
     const complete = exerciseLogged(exDraft) && exerciseInRange(exDraft, exCfg);
-    const topHit = hitTopOfRange(exDraft, exCfg);
 
     const lastStr = last
-      ? `Last: ${last.weight}kg × ${last.sets.map(s => s.reps ?? "—").join(",")}`
+      ? (last.perSet
+          ? `Last: ${last.sets.map(s => s.weight ?? "—").join("/")}kg × ${last.sets.map(s => s.reps ?? "—").join(",")}`
+          : `Last: ${last.weight}kg × ${last.sets.map(s => s.reps ?? "—").join(",")}`)
       : `Last: —`;
 
     const targetStr = `${exCfg.sets} × ${exCfg.repMin}–${exCfg.repMax}<span class="sep">·</span>${exCfg.rest}${exCfg.suffix ? '<span class="sep">·</span>'+exCfg.suffix : ''}`;
 
     let body = "";
     if (open) {
+      const perSet = !!exDraft.perSet;
       const weight = exDraft.weight ?? "";
       const setsHtml = exDraft.sets.map((s, si) => {
         const repsVal = s.reps ?? "";
@@ -1043,6 +1107,23 @@ function viewSession() {
           if (s.reps >= exCfg.repMax) cls += " at-top";
           else if (s.reps >= exCfg.repMin) cls += " in-range";
           else cls += " below";
+        }
+        if (perSet) {
+          const wVal = s.weight ?? "";
+          const lastW = last
+            ? (last.perSet ? (last.sets[si]?.weight ?? last.weight ?? null) : last.weight)
+            : null;
+          return `<div class="set-row">
+            <div class="set-label">S${si+1}</div>
+            <input class="set-weight-input" type="number" inputmode="decimal" step="${exCfg.inc}" min="0"
+              data-input="set-weight" data-ex="${i}" data-set="${si}"
+              value="${wVal}" placeholder="${lastW ?? '—'}">
+            <button class="rep-stepper" data-action="rep-dec" data-ex="${i}" data-set="${si}">−</button>
+            <input class="${cls}" type="number" inputmode="numeric" pattern="[0-9]*" min="0"
+              data-input="rep" data-ex="${i}" data-set="${si}"
+              value="${repsVal}" placeholder="${lastReps ?? exCfg.repMin}">
+            <button class="rep-stepper" data-action="rep-inc" data-ex="${i}" data-set="${si}">+</button>
+          </div>`;
         }
         return `<div class="set-row">
           <div class="set-label">S${si+1}</div>
@@ -1055,20 +1136,32 @@ function viewSession() {
         </div>`;
       }).join("");
 
-      const flag = topHit && exDraft.weight != null
-        ? `<div class="range-flag"><strong>TOP OF RANGE HIT</strong> — next session: ${exDraft.weight + exCfg.inc}kg</div>`
+      const setsHeader = perSet
+        ? `<div class="set-row set-row-header">
+            <div class="set-label"></div>
+            <div class="hcol">KG</div>
+            <div class="hspacer"></div>
+            <div class="hcol">REPS</div>
+            <div class="hspacer"></div>
+          </div>`
         : "";
 
-      body = `<div class="exercise-body">
-        <div class="weight-row">
+      const flagInner = progressionFlagHtml(exDraft, exCfg);
+      const flag = flagInner ? `<div class="range-flag">${flagInner}</div>` : "";
+
+      const weightRow = perSet ? "" : `<div class="weight-row">
           <div class="label-inline">KG</div>
           <button class="stepper" data-action="weight-dec" data-ex="${i}" data-inc="${exCfg.inc}">−</button>
           <input class="weight-input" type="number" inputmode="decimal" step="${exCfg.inc}" min="0"
             data-input="weight" data-ex="${i}" value="${weight}" placeholder="—">
           <button class="stepper" data-action="weight-inc" data-ex="${i}" data-inc="${exCfg.inc}">+</button>
           <div class="unit"></div>
-        </div>
-        <div class="sets-grid">${setsHtml}</div>
+        </div>`;
+
+      body = `<div class="exercise-body">
+        <button class="mode-toggle" data-action="toggle-per-set" data-ex="${i}">${perSet ? '→ single weight' : '→ per-set weights'}</button>
+        ${weightRow}
+        <div class="sets-grid">${setsHeader}${setsHtml}</div>
         ${flag}
       </div>`;
     }
@@ -1136,15 +1229,17 @@ function viewHistory() {
 function viewDetail() {
   const session = state.history.find(s => s.id === state.detailId);
   if (!session) { state.view = "history"; return viewHistory(); }
-  const cfg = PROGRAM[session.type];
+  const cfg = PROGRAM[session.type]; // undefined for legacy A/B sessions
 
   const blocks = session.exercises.map((ex, i) => {
-    const exCfg = cfg.exercises[i] || {};
-    const setStr = ex.sets.map(s => s.reps ?? "—").join(", ");
-    const weight = ex.weight != null ? `${ex.weight}kg` : "—";
+    const exCfg = (cfg && cfg.exercises[i]) || {};
+    const suffix = exCfg.suffix ? ' '+exCfg.suffix : '';
+    const data = ex.perSet
+      ? ex.sets.map(s => `<strong>${s.weight ?? "—"}kg</strong> × ${s.reps ?? "—"}`).join(" · ") + suffix
+      : `<strong>${ex.weight != null ? ex.weight + "kg" : "—"}</strong> · ${ex.sets.map(s => s.reps ?? "—").join(", ")}${suffix}`;
     return `<div class="detail-block">
       <div class="d-name">${ex.name}</div>
-      <div class="d-data"><strong>${weight}</strong> · ${setStr}${exCfg.suffix ? ' '+exCfg.suffix : ''}</div>
+      <div class="d-data">${data}</div>
     </div>`;
   }).join("");
 
@@ -1199,7 +1294,6 @@ function refreshExerciseState(idx) {
   if (!card) return;
 
   const complete = exerciseLogged(exDraft) && exerciseInRange(exDraft, cfg);
-  const topHit = hitTopOfRange(exDraft, cfg);
   const open = card.classList.contains("open");
 
   card.classList.toggle("complete", complete);
@@ -1208,8 +1302,8 @@ function refreshExerciseState(idx) {
   if (toggle) toggle.textContent = open ? '▼' : (complete ? '✓' : '▸');
 
   let flag = card.querySelector(".range-flag");
-  if (topHit && exDraft.weight != null) {
-    const html = `<strong>TOP OF RANGE HIT</strong> — next session: ${exDraft.weight + cfg.inc}kg`;
+  const html = progressionFlagHtml(exDraft, cfg);
+  if (html) {
     if (flag) {
       flag.innerHTML = html;
     } else {
@@ -1324,6 +1418,27 @@ document.addEventListener("click", e => {
       render();
       break;
     }
+    case "toggle-per-set": {
+      const idx = parseInt(data.ex, 10);
+      const ex = state.draft.exercises[idx];
+      if (!ex.perSet) {
+        ex.perSet = true;
+        // Seed each set with the exercise-wide weight so nothing is lost
+        ex.sets.forEach(s => { if (s.weight == null) s.weight = ex.weight; });
+      } else {
+        ex.perSet = false;
+        if (ex.weight == null) {
+          const seeded = ex.sets.find(s => s.weight != null);
+          if (seeded) ex.weight = seeded.weight;
+        }
+      }
+      saveDraft();
+      // Full re-render swaps the card layout; restore scroll so the card stays put
+      const y = window.scrollY;
+      render();
+      window.scrollTo(0, y);
+      break;
+    }
     case "weight-inc":
     case "weight-dec": {
       const idx = parseInt(data.ex, 10);
@@ -1387,6 +1502,16 @@ document.addEventListener("input", e => {
     return;
   }
 
+  if (kind === "set-weight") {
+    const idx = parseInt(target.dataset.ex, 10);
+    const sIdx = parseInt(target.dataset.set, 10);
+    const raw = parseFloat(target.value);
+    const v = isNaN(raw) ? null : Math.max(0, raw);
+    state.draft.exercises[idx].sets[sIdx].weight = v;
+    saveDraft();
+    return;
+  }
+
   if (kind === "rep") {
     const idx = parseInt(target.dataset.ex, 10);
     const sIdx = parseInt(target.dataset.set, 10);
@@ -1412,7 +1537,7 @@ document.addEventListener("blur", e => {
   if (state.view !== "session") return;
   const t = e.target;
   if (!t.dataset) return;
-  if (t.dataset.input === "rep" || t.dataset.input === "weight") {
+  if (t.dataset.input === "rep" || t.dataset.input === "weight" || t.dataset.input === "set-weight") {
     refreshExerciseState(parseInt(t.dataset.ex, 10));
   }
 }, true);
