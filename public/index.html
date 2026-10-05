@@ -477,7 +477,13 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .rep-input.in-range { border-color: var(--accent); }
 .rep-input.at-top { border-color: var(--success); color: var(--success); }
-.rep-input.below { border-color: var(--border); color: var(--text-dim); }
+.rep-input.below { border-color: var(--text); color: var(--text); }
+
+/* Active (tapped, nothing typed yet): white, before range colours take over */
+.rep-input:focus:placeholder-shown,
+.set-weight-input:focus:placeholder-shown { border-color: var(--text); }
+.rep-input:focus::placeholder,
+.set-weight-input:focus::placeholder { color: var(--text); }
 
 .set-row .rep-stepper {
   width: 44px;
@@ -729,32 +735,32 @@ const PROGRAM = {
   "Day 1": {
     focus: "Lower",
     exercises: [
-      { name: "Leg Press",                sets: 4, repMin: 6,  repMax: 8,  rest: "3 min",   inc: 5 },
-      { name: "Hip Thrust",               sets: 4, repMin: 6,  repMax: 8,  rest: "2-3 min", inc: 5 },
+      { name: "Leg Press",                sets: 4, repMin: 8,  repMax: 10, rest: "3 min",   inc: 5 },
+      { name: "Hip Thrust",               sets: 4, repMin: 8,  repMax: 10, rest: "2-3 min", inc: 5 },
       { name: "Bulgarian Split Squat",    sets: 3, repMin: 8,  repMax: 10, rest: "2 min",   inc: 2.5, suffix: "/ leg" },
-      { name: "Leg Curl",                 sets: 3, repMin: 10, repMax: 12, rest: "90 s",    inc: 2.5 },
-      { name: "Standing Calf Raise",      sets: 4, repMin: 8,  repMax: 12, rest: "60 s",    inc: 2.5 }
+      { name: "Leg Curl",                 sets: 3, repMin: 8,  repMax: 10, rest: "90 s",    inc: 2.5 },
+      { name: "Standing Calf Raise",      sets: 4, repMin: 12, repMax: 15, rest: "60 s",    inc: 2.5 }
     ]
   },
   "Day 2": {
     focus: "Upper",
     exercises: [
-      { name: "Bench Press",              sets: 4, repMin: 5,  repMax: 6,  rest: "3 min", inc: 2.5 },
+      { name: "Bench Press",              sets: 4, repMin: 6,  repMax: 8,  rest: "3 min", inc: 2.5 },
       { name: "Chest-Supported Row",      sets: 4, repMin: 6,  repMax: 8,  rest: "2 min", inc: 2.5 },
       { name: "Seated DB Shoulder Press", sets: 3, repMin: 8,  repMax: 10, rest: "2 min", inc: 2.5 },
-      { name: "Lat Pulldown",             sets: 3, repMin: 10, repMax: 12, rest: "90 s",  inc: 2.5 },
-      { name: "Cable Lateral Raise",      sets: 3, repMin: 12, repMax: 15, rest: "60 s",  inc: 2.5 },
+      { name: "Lat Pulldown",             sets: 3, repMin: 8,  repMax: 10, rest: "90 s",  inc: 2.5 },
+      { name: "Cable Lateral Raise",      sets: 3, repMin: 10, repMax: 12, rest: "60 s",  inc: 2.5 },
       { name: "Tricep Rope Pushdown",     sets: 3, repMin: 10, repMax: 12, rest: "60 s",  inc: 2.5 }
     ]
   },
   "Day 3": {
     focus: "Full Body",
     exercises: [
-      { name: "Trap Bar DL / Leg Press",  sets: 3, repMin: 6,  repMax: 8,  rest: "3 min", inc: 5 },
-      { name: "Pull-ups / Lat Pulldown",  sets: 4, repMin: 6,  repMax: 10, rest: "2 min", inc: 2.5 },
+      { name: "Trap Bar DL / Leg Press",  sets: 3, repMin: 8,  repMax: 10, rest: "3 min", inc: 5 },
+      { name: "Pull-ups / Lat Pulldown",  sets: 4, repMin: 8,  repMax: 10, rest: "2 min", inc: 2.5 },
       { name: "Incline DB Press",         sets: 3, repMin: 8,  repMax: 10, rest: "90 s",  inc: 2.5 },
       { name: "Walking Lunges",           sets: 3, repMin: 10, repMax: 10, rest: "90 s",  inc: 2.5, suffix: "/ leg" },
-      { name: "Leg Extension",            sets: 3, repMin: 12, repMax: 15, rest: "90 s",  inc: 2.5 },
+      { name: "Leg Extension",            sets: 3, repMin: 8,  repMax: 10, rest: "90 s",  inc: 2.5 },
       { name: "EZ-Bar Curl",              sets: 3, repMin: 8,  repMax: 10, rest: "60 s",  inc: 2.5 }
     ]
   }

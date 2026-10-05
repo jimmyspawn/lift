@@ -30,35 +30,35 @@ The old 4-session rotating split (Lower A → Upper A → Lower B → Upper B) h
 
 | # | Exercise | Sets × Reps | Rest |
 |---|----------|-------------|------|
-| 1 | Leg Press | 4 × 6–8 | 3 min |
-| 2 | Hip Thrust (barbell) | 4 × 6–8 | 2–3 min |
+| 1 | Leg Press | 4 × 8–10 | 3 min |
+| 2 | Hip Thrust (barbell) | 4 × 8–10 | 2–3 min |
 | 3 | Bulgarian Split Squat (DBs) | 3 × 8–10/leg | 2 min |
-| 4 | Lying or Seated Leg Curl | 3 × 10–12 | 90 s |
-| 5 | Standing Calf Raise | 4 × 8–12 | 60 s |
+| 4 | Lying or Seated Leg Curl | 3 × 8–10 | 90 s |
+| 5 | Standing Calf Raise | 4 × 12–15 | 60 s |
 
 ### Day 2 — Upper
 
 | # | Exercise | Sets × Reps | Rest |
 |---|----------|-------------|------|
-| 1 | Barbell Bench Press | 4 × 5–6 | 3 min |
+| 1 | Barbell Bench Press | 4 × 6–8 | 3 min |
 | 2 | Chest-Supported Row | 4 × 6–8 | 2 min |
 | 3 | Seated DB Shoulder Press | 3 × 8–10 | 2 min |
-| 4 | Lat Pulldown | 3 × 10–12 | 90 s |
-| 5 | Cable Lateral Raise | 3 × 12–15 | 60 s |
+| 4 | Lat Pulldown | 3 × 8–10 | 90 s |
+| 5 | Cable Lateral Raise | 3 × 10–12 | 60 s |
 | 6 | Tricep Rope Pushdown | 3 × 10–12 | 60 s |
 
 ### Day 3 — Full Body
 
 | # | Exercise | Sets × Reps | Rest |
 |---|----------|-------------|------|
-| 1 | Trap Bar Deadlift *(if physio-cleared)* OR Leg Press (2nd variation) | 3 × 6–8 | 3 min |
-| 2 | Pull-ups (or Lat Pulldown) | 4 × 6–10 | 2 min |
+| 1 | Trap Bar Deadlift *(if physio-cleared)* OR Leg Press (2nd variation) | 3 × 8–10 | 3 min |
+| 2 | Pull-ups (or Lat Pulldown) | 4 × 8–10 | 2 min |
 | 3 | Incline Dumbbell Press | 3 × 8–10 | 90 s |
 | 4 | Walking Lunges (DBs) | 3 × 10/leg | 90 s |
-| 5 | Leg Extension | 3 × 12–15 | 90 s |
+| 5 | Leg Extension | 3 × 8–10 | 90 s |
 | 6 | EZ-Bar Curl | 3 × 8–10 | 60 s |
 
-Per-leg/per-side exercises log reps per side. Optional: seated calf raises can be appended to Day 3.
+Rep ranges revised 2026-10-05 (mostly shifted to 8–10). Per-leg/per-side exercises log reps per side. Optional: seated calf raises can be appended to Day 3.
 
 ### Migration notes (implemented)
 
