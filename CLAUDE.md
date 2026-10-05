@@ -95,6 +95,7 @@ Deloads happen every 6–8 weeks: same exercises, ~70% working weight, same rep 
 
 - `docker-compose.yml` in repo root; one-command deploy on the NAS.
 - Remote: `https://github.com/jimmyspawn/lift.git`. Push auth is via GitHub CLI (`gh auth login`, HTTPS, set up 2026-10-05) — `git push` works from this Mac. The NAS pulls anonymously via `nas-update.sh`, so it needs no credentials.
+- **Deploy: `./deploy.sh`** from this Mac — pushes, then SSHes to the NAS (`JimmyAdmin@192.168.86.23`, key `~/.ssh/lift_nas`) and runs `sudo /volume1/docker/lift-deploy.sh`, a root-owned copy of `nas-update.sh` allowed passwordless via `/etc/sudoers.d/lift-deploy`. The copy lives outside the repo so a git pull can't change what runs as root — refresh it by hand if `nas-update.sh` changes. UGOS updates may reset sudoers.
 
 ## Conventions & preferences
 
