@@ -94,7 +94,7 @@ Deloads happen every 6–8 weeks: same exercises, ~70% working weight, same rep 
 ## Deployment
 
 - `docker-compose.yml` in repo root; one-command deploy on the NAS.
-- Git repo exists locally. GitHub push was blocked by an auth error (password auth removed by GitHub in 2021). Recommended fix: `gh auth login` via GitHub CLI; alternatives are a fine-grained PAT or SSH keys. Status unresolved — check before assuming remote is set up.
+- Remote: `https://github.com/jimmyspawn/lift.git`. Push auth is via GitHub CLI (`gh auth login`, HTTPS, set up 2026-10-05) — `git push` works from this Mac. The NAS pulls anonymously via `nas-update.sh`, so it needs no credentials.
 
 ## Conventions & preferences
 
