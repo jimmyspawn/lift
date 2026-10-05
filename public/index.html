@@ -1560,6 +1560,18 @@ document.getElementById("import-file").addEventListener("change", e => {
 loadAll();
 render();
 
+// Home-screen web apps on iOS resume rather than reload, so a deploy never
+// shows up. After a minute in the background, reload to pick up the latest
+// version (the server sends Cache-Control: no-cache, so this revalidates).
+// Skip mid-session — the draft is saved, but reloading would drop the view.
+let hiddenAt = null;
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) { hiddenAt = Date.now(); return; }
+  if (hiddenAt && Date.now() - hiddenAt > 60000 && state.view !== "session") {
+    location.reload();
+  }
+});
+
 </script>
 </body>
 </html>
